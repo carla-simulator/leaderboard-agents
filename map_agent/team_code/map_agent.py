@@ -296,10 +296,6 @@ class MapAgent(AutonomousAgent):
                 continue
 
             if self._is_location_obstacle(target_locations, lidar_location):
-                # loc__ = np.array([[lidar_location.x, lidar_location.y, lidar_location.z, 1]])
-                # loc_ = np.matmul(base_transform.get_matrix(), np.transpose(loc__))
-                # loc = carla.Location(loc_[0][0], loc_[1][0], loc_[2][0])
-                # self._world.debug.draw_point(loc, size=0.2, life_time=0.25, color=carla.Color(0,255,255))
                 return True
 
         return False

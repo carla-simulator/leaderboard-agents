@@ -24,7 +24,7 @@ echo "Copying the team code into the folder"
 cp -fr team_code/ .tmp/team_code
 
 echo "Building the docker"
-docker build --force-rm -t map_agent_2 -f Dockerfile.master .
+docker build --force-rm -t map_agent -f Dockerfile .
 
 echo "Removing the temporary file"
 rm -fr .tmp
