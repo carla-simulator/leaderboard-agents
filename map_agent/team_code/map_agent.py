@@ -7,12 +7,6 @@
 This module provides an example of an agent that doesn't use the carla.Map in order to
 navigate through the town, by using the (https://github.com/carla-simulator/map) library,
 which doesn't access any privileged information.
-
-This library isn't installed automatically by the leaderboard.
-
-This agent ignores all dynamic elements of the scene as well as traffic lights so it is
-recommended to remove the background activity when checking this example (to do so, go to
-"leaderboard/scenarios/route_scenario.py" and change the dictionary at "_initialize_actors")
 """
 
 from __future__ import print_function
