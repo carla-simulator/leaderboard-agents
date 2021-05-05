@@ -29,10 +29,8 @@ ENV SCENARIO_RUNNER_ROOT "/workspace/scenario_runner"
 ENV LEADERBOARD_ROOT "/workspace/leaderboard"
 ENV TEAM_CODE_ROOT "/workspace/team_code"
 
-COPY .tmp/PythonAPI ${CARLA_ROOT}/PythonAPI
 COPY .tmp/scenario_runner ${SCENARIO_RUNNER_ROOT}
 COPY .tmp/leaderboard ${LEADERBOARD_ROOT}
-COPY .tmp/team_code ${TEAM_CODE_ROOT}
 
 RUN pip3 install --user -r ${SCENARIO_RUNNER_ROOT}/requirements.txt
 RUN pip3 install --user -r ${LEADERBOARD_ROOT}/requirements.txt
@@ -40,7 +38,7 @@ RUN pip3 install --user -r ${LEADERBOARD_ROOT}/requirements.txt
 RUN mkdir -p /workspace/results
 RUN chmod +x $LEADERBOARD_ROOT/scripts/run_evaluation.sh
 
-ENV PYTHONPATH ${SCENARIO_RUNNER_ROOT}:"${CARLA_ROOT}/PythonAPI/carla":"${CARLA_ROOT}/PythonAPI/carla/dist/carla-leaderboard-py3x.egg":"${LEADERBOARD_ROOT}":$TEAM_CODE_ROOT:${PYTHONPATH}
+ENV PYTHONPATH ${SCENARIO_RUNNER_ROOT}:${LEADERBOARD_ROOT}:${TEAM_CODE_ROOT}:${PYTHONPATH}
 
 ########################################################################################################################
 ########################################################################################################################
@@ -69,6 +67,9 @@ ENV ROUTES ${TEAM_CODE_ROOT}/data/routes_training.xml
 ENV REPETITIONS 1
 ENV CHECKPOINT_ENDPOINT /workspace/results/results.json
 ENV DEBUG_CHALLENGE 0
+
+COPY .tmp/entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
 
 ########################################################################################################################
 ########################################################################################################################
