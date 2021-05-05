@@ -19,36 +19,17 @@ def get_entry_point():
 class ProfilerAgent(NpcAgent):
 
     def setup(self, path_to_conf_file):
-        """
-        Setup the agent parameters
-        """
         self.track = Track.SENSORS
 
     def sensors(self):
-        """
-        Define the sensor suite required by the agent
-        :return: a list containing the required sensors in the following format:
-        [
-            {'type': 'sensor.camera.rgb', 'x': 0.7, 'y': -0.4, 'z': 1.60, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0,
-                      'width': 300, 'height': 200, 'fov': 100, 'id': 'Left'},
-            {'type': 'sensor.camera.rgb', 'x': 0.7, 'y': 0.4, 'z': 1.60, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0,
-                      'width': 300, 'height': 200, 'fov': 100, 'id': 'Right'},
-            {'type': 'sensor.lidar.ray_cast', 'x': 0.7, 'y': 0.0, 'z': 1.60, 'yaw': 0.0, 'pitch': 0.0, 'roll': 0.0,
-             'id': 'LIDAR'}
-        ]
-        """
         sensors = [
             {'type': 'sensor.camera.rgb', 'x': 0.7, 'y': -0.4, 'z': 1.60, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0,
-             'width': 300, 'height': 200, 'fov': 100, 'id': 'Left'},
+             'width': 1920, 'height': 1080, 'fov': 100, 'id': 'Left'},
         ]
 
         return sensors
 
     def __call__(self):
-        """
-        Execute the agent call, e.g. agent()
-        Returns the next vehicle controls
-        """
         with nvtx.annotate("AutonomousAgent.get_data", color="purple"):
             input_data = self.sensor_interface.get_data()
 
@@ -68,7 +49,4 @@ class ProfilerAgent(NpcAgent):
 
     @nvtx.annotate("AutonomousAgent.run_step", color="purple")
     def run_step(self, input_data, timestamp):
-        """
-        Execute one step of navigation.
-        """
         return super(ProfilerAgent, self).run_step(input_data, timestamp)

@@ -1,11 +1,6 @@
 #!/bin/bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [ -z "$CARLA_ROOT" ]; then
-  echo "Error $CARLA_ROOT is empty. Set \$CARLA_ROOT as an environment variable first."
-  exit 1
-fi
-
 rm -fr ${SCRIPT_DIR}/.tmp
 
 echo "Creating a temporary folder"

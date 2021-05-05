@@ -21,7 +21,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 -m pip install --upgrade pip \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the files into the docker
 WORKDIR /workspace
 
 ENV CARLA_ROOT "/workspace/CARLA"
@@ -40,12 +39,6 @@ RUN chmod +x $LEADERBOARD_ROOT/scripts/run_evaluation.sh
 
 ENV PYTHONPATH ${SCENARIO_RUNNER_ROOT}:${LEADERBOARD_ROOT}:${TEAM_CODE_ROOT}:${PYTHONPATH}
 
-########################################################################################################################
-########################################################################################################################
-############                                BEGINNING OF AGENT COMMANDS                                      ###########
-########################################################################################################################
-########################################################################################################################
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-transport-https \
     ca-certificates \
@@ -60,26 +53,19 @@ RUN wget -qO - https://developer.download.nvidia.com/devtools/repos/ubuntu2004/a
 
 RUN pip3 install --user nvtx
 
-ENV TEAM_AGENT ${TEAM_CODE_ROOT}/profiler_agent.py
 ENV CHALLENGE_TRACK_CODENAME SENSORS
 ENV SCENARIOS ${LEADERBOARD_ROOT}/data/all_towns_traffic_scenarios_public.json
-ENV ROUTES ${TEAM_CODE_ROOT}/data/routes_training.xml
+ENV ROUTES ${LEADERBOARD_ROOT}/data/routes_training.xml
 ENV REPETITIONS 1
 ENV CHECKPOINT_ENDPOINT /workspace/results/results.json
 ENV DEBUG_CHALLENGE 0
-
-COPY .tmp/entrypoint.sh /
-ENTRYPOINT ["/entrypoint.sh"]
-
-########################################################################################################################
-########################################################################################################################
-############                                   END OF AGENT COMMANDS                                         ###########
-########################################################################################################################
-########################################################################################################################
 
 ENV HTTP_PROXY ""
 ENV HTTPS_PROXY ""
 ENV http_proxy ""
 ENV https_proxy ""
+
+COPY .tmp/entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["/bin/bash"]
