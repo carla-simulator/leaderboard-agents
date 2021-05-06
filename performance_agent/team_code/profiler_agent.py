@@ -24,7 +24,9 @@ class ProfilerAgent(NpcAgent):
     def sensors(self):
         sensors = [
             {'type': 'sensor.camera.rgb', 'x': 0.7, 'y': -0.4, 'z': 1.60, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0,
-             'width': 1920, 'height': 1080, 'fov': 100, 'id': 'Left'},
+             'width': 1280, 'height': 720, 'fov': 100, 'id': 'Camera1'},
+            {'type': 'sensor.camera.rgb', 'x': 0.7, 'y': -0.4, 'z': 1.60, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0,
+             'width': 1280, 'height': 720, 'fov': 100, 'id': 'Camera2'},
         ]
 
         return sensors

@@ -12,6 +12,8 @@ docker run \
     --rm \
     --privileged \
     --net=host \
+    --volume=${SCRIPT_DIR}/../submodules/leaderboard:/workspace/leaderboard:rw \
+    --volume=${SCRIPT_DIR}/../submodules/scenario_runner:/workspace/scenario_runner:rw \
     --volume=${SCRIPT_DIR}/results:/workspace/results:rw \
     --volume=${SCRIPT_DIR}/benchmarking:/workspace/benchmarking:rw \
     --volume=${SCRIPT_DIR}/profiling:/workspace/profiling:rw \
