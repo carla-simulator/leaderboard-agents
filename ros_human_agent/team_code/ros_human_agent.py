@@ -13,10 +13,6 @@ def get_entry_point():
 
 class ROSHumanAgent(ROS1Agent):
 
-    """
-    Minimal Stack Agent
-    """
-
     def setup(self, path_to_conf_file):
         self.track = Track.SENSORS
 
