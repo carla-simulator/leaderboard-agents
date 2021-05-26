@@ -1,7 +1,6 @@
-__pycache__
-
+_pycache__
+*.pyc
 */results
 */benchmarking
 */profiling
-
 .vscode
