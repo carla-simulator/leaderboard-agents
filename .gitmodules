@@ -9,3 +9,6 @@
 [submodule "submodules/map"]
 	path = submodules/map
 	url = https://github.com/carla-simulator/map.git
+[submodule "submodules/ros-bridge"]
+	path = submodules/ros-bridge
+	url = https://github.com/carla-simulator/ros-bridge
