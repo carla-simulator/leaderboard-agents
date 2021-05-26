@@ -19,13 +19,15 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-python3 ${TEAM_CODE_ROOT}/leaderboard/profiler/leaderboard_evaluator.py \
+[[ -d "/workspace/results/profiler" ]] || mkdir "/workspace/results/profiler"
+
+python3 ${TEAM_CODE_ROOT}/profiler/leaderboard_evaluator.py \
 --scenarios=${SCENARIOS}  \
---routes=${TEAM_CODE_ROOT}/leaderboard/profiler/data/route.xml \
+--routes=${TEAM_CODE_ROOT}/profiler/data/route.xml \
 --repetitions=${REPETITIONS} \
 --track=${CHALLENGE_TRACK_CODENAME} \
 --checkpoint=${CHECKPOINT_ENDPOINT} \
---agent=${TEAM_CODE_ROOT}/profiler_agent.py \
+--agent=${TEAM_CODE_ROOT}/profiler/profiler_agent.py \
 --agent-config=${TEAM_CONFIG} \
 --debug=${DEBUG_CHALLENGE} \
 --record=${RECORD_PATH} \

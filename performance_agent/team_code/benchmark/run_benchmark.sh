@@ -24,15 +24,17 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-python3 ${TEAM_CODE_ROOT}/leaderboard/benchmark/leaderboard_evaluator.py \
+[[ -d "/workspace/results/benchmark" ]] || mkdir "/workspace/results/benchmark"
+
+python3 ${TEAM_CODE_ROOT}/benchmark/leaderboard_evaluator.py \
 --scenarios=${SCENARIOS}  \
 --routes=${ROUTES} \
 --repetitions=${REPETITIONS} \
 --track=${CHALLENGE_TRACK_CODENAME} \
 --checkpoint=${CHECKPOINT_ENDPOINT} \
---agent=${TEAM_CODE_ROOT}/benchmark_agent.py \
+--agent=${TEAM_CODE_ROOT}/benchmark/benchmark_agent.py \
 --agent-config=${TEAM_CONFIG} \
 --debug=${DEBUG_CHALLENGE} \
 --record=${RECORD_PATH} \
 --resume=${RESUME} \
---benchmark-filename=/workspace/benchmarking/${BENCHMARK_FILENAME}
+--benchmark-filename=/workspace/results/benchmark/${BENCHMARK_FILENAME}

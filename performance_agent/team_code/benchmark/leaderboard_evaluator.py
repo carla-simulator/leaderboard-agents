@@ -131,7 +131,7 @@ def main():
 
     # benchmark options
     parser.add_argument("--benchmark-filename", type=str,
-                        default='benchmark.md',
+                        default='./benchmark.md',
                         help="File used for saving benchmark results")
 
     arguments = parser.parse_args()
