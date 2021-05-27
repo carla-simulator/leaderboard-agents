@@ -1,13 +1,41 @@
 # leaderboard-agents
 
-This repository serves as a guideline for users to see how to run different agents inside of a docker which is already prepared to be submitted into the Leaderboard. The `submodules` contains references to all the necessary modules that agents need to have in order to run the leaderboard. Remember to use `git submodule update --init --recursive` to download all submodules.
+This repository serves as a guideline for users to see how to run different agents inside the leaderboard. Each of these agent can be directly run on a local version of the Leaderboard, and they also come with their own docker files, to easily understand the steps needed to submit them into the Leaderboard itself. Additionally, all agents have there own specific purposes, so it is recommended to check them out and see if anyone suits your needs.
 
-Except from scenario runner and the leaderboard, which all agents use, the rest of the packages might be unique to a specfic agent. Navigate to each of the agents to understand more about what they do and which of the submodules do they require. Some agents might be run differently but for most cases, do the following in order to create and run them:
+## Submodules
 
-1) Set the *CARLA_ROOT* environment variable to point to a CARLA package
-2) Create the docker of the desired agent: `./agent-folder-path/make_docker.sh`.
-3) Start the CARLA server
-4) Run the docker: `./agent-folder-path/run_docker.sh`.
-5) Run the *run_evaluation.sh* script to start the leaderboard: `bash leaderboard/scripts/run_evaluation.sh`.
+In order to run the Leaderboard, you need to also have [CARLA](https://github.com/carla-simulator/carla) as well as [ScenarioRunner](https://github.com/carla-simulator/scenario_runner) installed. Both ScenarioRunner and the Leaderboard are available in this repository, inside the `submodules` folder, and they will be automatically fetched when creating the docker. As it is expected for you to do some tests locally, a specific version of CARLA isn't been given, instead, use the `CARLA_ROOT` environment variable to point to your CARLA folder.
 
+The `submodules` folder also contains references to other packages needed by specific agents. The following table shows the exact submodules used for each agent:
 
+| Agent | ScenarioRunner | Leaderboard | AD Map | ROS Bridge |
+| ---- | ----- | ----- | ------------- | -------- |
+| AD Map agent |  &#9989; | &#9989;| &#9989;|  |
+| ROS human agent | &#9989; | &#9989;| | &#9989;|
+| Performance agent | &#9989; | &#9989; |  |  |
+
+**Note:** Remember to download all the submodules using
+
+```git submodule update --init --recursive```,
+
+or if you only want a specific one:
+
+```git submodule update --init --recursive <path to specific submodule>```.
+
+## Creation of the agent docker
+
+To ease the creation of the docker files, each agent is already prepared with its own files, and they only have to be run in order to automatically create them. While some agents might have slight variations of this process, the only steps needed are to **set the `CARLA_ROOT` environment variable** to point to the desired version of CARLA, and then run the docker creation file:
+
+```bash <path to specific agent>/make_docker.sh```.
+
+## Running the agent docker
+
+The process of running the agent has also been prepared, having only to **start the CARLA server**, run the docker file
+
+```bash <path to specific agent>/run_docker.sh```,
+
+and run the Leaderboard
+
+```bash leaderboard/scripts/run_evaluation.sh```.
+
+**Note:** By default, all dockers have a shared volume correponding to the `results` folder.

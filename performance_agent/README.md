@@ -1,35 +1,30 @@
-# performance-agent
+# Performance agent
 
 This agent is intended to be used as a helping tool in benchmarking and profiling the different aspects of the Leaderboard. As the focus of this agent is the Leaderboard itself, and not the agent, it will function very differently from the rest. As such **this agent should not be taken as a reference** to build other Leaderboard agents.
 
-Due to its unique objective, its usage is also different:
+### Usage of the agent
 
-1) Build the docker of the agent `./make_docker.sh`
-2) Run the CARLA server `./CarlaUE4.sh`
-3) Set a `CARLA_ROOT` environment variable pointing to the CARLA package.
-4) Run the docker `./run_docker.sh`
+To ease the testing of the Leaderboard and CARLA, this agent has several modifications.
 
-As its focus is the Leaderboard itself, when running the docker, the Leaderboard and Scenario Runner submodule volumes will be shared with its local counterparts and any changes made will directly affect the docker. For CARLA, the `CARLA_ROOT` environment variable is used, so in order to use different versions of CARLA, such set that variable, close and reopen the docker.
+When running the docker, **the Leaderboard and Scenario Runner volumes are shared** with its local counterparts. Therefore, and any changes made will directly affect the ones inside the docker.
+
+For CARLA, the `CARLA_ROOT` environment variable isn't used when building the docker, but instead taken into account when running it, so that different CARLA versions can be easily used. To change the version of CARLA, change the `CARLA_ROOT`, close and reopen the docker.
 
 ### Benchmarking
 
-To start a benchmark run the benchmark script.
+The agent comes with a benchmark script, which runs a [version of the Leaderboard](https://github.com/carla-simulator/leaderboard-agents/blob/main/performance_agent/team_code/benchmark/leaderboard_evaluator.py) that acts as a wrapper of the Leaderboard, recording several parameters of each route, and creating a table so that they can be compared. To start a benchmark, just run the benchmark script.
 
-```
-bash team_code/benchmark/run_benchmark.sh
-```
+```bash team_code/benchmark/run_benchmark.sh -o <benchmark file name>```
 
-This script runs a [version of the Leaderboard](https://github.com/carla-simulator/leaderboard-agents/tree/profiler_agent/performance_agent/team_code/leaderboard/benchmark) that records and benchmarks all the simulated routes.
+**Note that `<benchmark file name>` will be name of the benchmark file.**
 
 ### Profiling
 
-To start the profiler run the profiler script:
+Lastly, the agent is also capable of performing profiling. This uses a [version of the Leaderboard](https://github.com/carla-simulator/leaderboard-agents/blob/main/performance_agent/team_code/profiler/leaderboard_evaluator.py) with additionally has anotations during the Leaderboard runtime. This creates a file that can then be opened using NVIDIA Nsight Systems. **To avoid the files being excessively big**, a [specific route](https://github.com/carla-simulator/leaderboard-agents/tree/main/performance_agent/team_code/profiler/data) is used, and **it should be stopped mid simulation**. To start the profiler rundo the following:
 
 ```sh
 sh -c 'echo 1 >/proc/sys/kernel/perf_event_paranoid'
-nsys profile --sampling-period 500000 --sample=cpu --output=/workspace/results/profiler/<NAME>.qdrep bash team_code/profiler/run_profiler.sh
+nsys profile --sampling-period 500000 --sample=cpu --output=/workspace/results/profiler/<profiler file name>.qdrep bash team_code/profiler/run_profiler.sh
 ```
 
-**Note that `<NAME>` will be name of the profilling file.**
-
-This script runs a [version of the Leaderboard](https://github.com/carla-simulator/leaderboard-agents/tree/profiler_agent/performance_agent/team_code/leaderboard/profiler) with anotations at the functions of the Leaderboard called during runtime. This Leaderboard creates a file that can then be opened using NVIDIA Nsight Systems. **TODO:** Add that the route is fixed and not $ROUTES and that should be stopped mid simulation
+**Note that `<profiler file name>` will be name of the profiler file.**
