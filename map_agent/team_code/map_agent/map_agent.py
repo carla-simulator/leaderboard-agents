@@ -17,29 +17,25 @@ import math
 import os
 import xml.etree.ElementTree as ET
 
-from map_agent_controller import VehiclePIDController
-from map_helper import (enu_to_carla_loc,
-                        get_shortest_route,
-                        get_route_lane_list,
-                        to_ad_paraPoint,
-                        get_lane_interval_list)
-
-from leaderboard.autoagents.autonomous_agent import AutonomousAgent, Track
+from .map_agent_controller import VehiclePIDController
+from .map_helper import (enu_to_carla_loc,
+                                  get_shortest_route,
+                                  get_route_lane_list,
+                                  to_ad_paraPoint,
+                                  get_lane_interval_list)
 
 import ad_map_access as ad
 
-def get_entry_point():
-    return 'MapAgent'
 
-class MapAgent(AutonomousAgent):
+class MapAgent(object):
     """
     Autonomous agent to control the ego vehicle using the AD Map library
     to parse the opendrive map information
     """
 
-    def setup(self, path_to_conf_file):
+    def __init__(self, global_plan_world_coord):
         """Setup the agent parameters"""
-        self.track = Track.MAP
+        self._global_plan_world_coord = global_plan_world_coord
 
         # Route
         self._route = []  # List of [carla.Waypoint, RoadOption]
@@ -56,6 +52,9 @@ class MapAgent(AutonomousAgent):
         self._lateral_pid = {'K_P': 1.95, 'K_D': 0.2, 'K_I': 0.05, 'dt': 0.05}
         self._longitudinal_pid = {'K_P': 1.0, 'K_D': 0, 'K_I': 0.05, 'dt': 0.05}
         self._max_brake = 0.75
+
+        # Sensor constants
+        self._sensor_z = 1.8
 
         # Current location constants
         self._weight = 0.95  # Weight of the expected location. Between 0 and 1
@@ -75,51 +74,18 @@ class MapAgent(AutonomousAgent):
         self._prev_location = None
         self._prev_heading = None
 
-    def sensors(self):
-        """Define the sensors required by the agent. IMU and GNSS are setup at the
-        same position to avoid having to change between those two coordinate references"""
-        self._sensor_z = 1.8
-        sensors = [
-            {
-                'type': 'sensor.opendrive_map',
-                'reading_frequency': 1,
-                'id': 'ODM'
-            },
-            {
-                'type': 'sensor.speedometer',
-                'id': 'Speed'
-            },
-            {
-                'type': 'sensor.other.gnss',
-                'x': 0, 'y': 0, 'z': self._sensor_z,
-                'id': 'GNSS'
-            },
-            {
-                'type': 'sensor.other.imu',
-                'x': 0, 'y': 0, 'z': 0,
-                'roll': 0, 'pitch': 0, 'yaw': 0,
-                'id': 'IMU'
-            },
-            {
-                'type': 'sensor.lidar.ray_cast',
-                'x': 0.7, 'y': 0.0, 'z': self._sensor_z,
-                'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0,
-                'id': 'LIDAR'
-            }
-        ]
-
-        return sensors
-
     def run_step(self, data, timestamp):
         """Execute one step of navigation."""
-        control = carla.VehicleControl()
+        control, status, target = carla.VehicleControl(), None, None
 
         # Initialize the map library
         if not self._map_initialized:
             if 'ODM' in data:
+                print("Init map")
                 self._map_initialized = self._initialize_map(data['ODM'][1]['opendrive'])
+                print("Init map done")
             else:
-                return control
+                return control, status, target
 
         # Create the route
         if not self._route:
@@ -135,6 +101,10 @@ class MapAgent(AutonomousAgent):
             target_location = self._get_target_location(current_location, current_speed)
             target_speed = self._get_target_speed(current_location)
             current_transform = self._get_current_transform(current_location, current_heading)
+
+            status = (current_transform, )
+            target = (target_location, target_speed)
+
 
             # Traffic Light tests, missing some attributes at the AD map library
             # ego_lane_id = to_ad_paraPoint(current_location).laneId
@@ -153,7 +123,7 @@ class MapAgent(AutonomousAgent):
             self._prev_heading = current_heading
             self._prev_location = current_location
 
-        return control
+        return control, status, target
 
     def _get_current_location(self, data):
         """Calculates the transform of the vehicle"""
@@ -196,7 +166,7 @@ class MapAgent(AutonomousAgent):
         compass_data = float(data['IMU'][1][6])
         if str(compass_data) == 'nan':
             return self._prev_heading  # Compass might return nan, so use the previous heading instead
-        compass_rad = (compass_data - math.pi / 2) % (2 * math.pi)  # Substract 90º and clip it
+        compass_rad = (compass_data - math.pi / 2) % (2 * math.pi)  # Substract 90 degrees and clip it
         return  carla.Vector3D(x=math.cos(compass_rad), y=math.sin(compass_rad))
 
     def _get_current_transform(self, location, heading):
@@ -399,5 +369,3 @@ class MapAgent(AutonomousAgent):
         for fname in [self._txt_name, self._xodr_name]:
             if os.path.exists(fname):
                 os.remove(fname)
-
-        super(MapAgent, self).destroy()

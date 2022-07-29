@@ -47,6 +47,10 @@ RUN apt-get update; \
   fi; \
   rm -rf /var/lib/apt/lists/*
 
+# RUN apt-get install -y --no-install-recommends \
+#         ros-${ROS_DISTRO}-rqt* \
+#     && rm -rf /var/lib/apt/lists/*
+
 ENV CARLA_ROOT "/workspace/CARLA"
 ENV SCENARIO_RUNNER_ROOT "/workspace/scenario_runner"
 ENV LEADERBOARD_ROOT "/workspace/leaderboard"

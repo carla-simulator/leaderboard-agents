@@ -4,6 +4,7 @@
 # For a copy, see <https://opensource.org/licenses/MIT>.
 
 import copy
+import queue
 import threading
 
 import rospy
@@ -12,7 +13,7 @@ import carla
 import numpy
 from leaderboard.autoagents.human_agent import HumanInterface, KeyboardControl
 
-from carla_msgs.msg import CarlaEgoVehicleControl
+from carla_msgs.msg import CarlaEgoVehicleControl, CarlaSpeedometer
 from sensor_msgs.msg import Image
 from std_msgs.msg import Bool
 
@@ -22,12 +23,13 @@ class HumanAgent(object):
     FREQUENCY = 20  # Hz
 
     def __init__(self):
-        self._hic = HumanInterface()
+        self._hic = HumanInterface(800, 600, 1)
         self._controller = KeyboardControl(path_to_conf_file=None)
         self.data_lock = threading.Lock()
         self._input_data = None
 
         self._camera_subscriber = rospy.Subscriber("/carla/hero/Center/image", Image, self._on_camera, queue_size=10)
+        self._speedometer_subscriber = rospy.Subscriber("/carla/hero/Speed", CarlaSpeedometer, self._on_speedometer, queue_size=10)
         self._vehicle_control_cmd_publisher = rospy.Publisher("/carla/hero/vehicle_control_cmd", CarlaEgoVehicleControl, queue_size=1)
 
         rospy.Timer(rospy.Duration(1.0 / HumanAgent.FREQUENCY), self.run_step)
@@ -40,6 +42,9 @@ class HumanAgent(object):
         array = numpy.reshape(array, (image.height, image.width, 4))
         with self.data_lock:
             self._input_data = {'Center': (image.header.seq, array)}
+
+    def _on_speedometer(self, speed):
+        print(speed.speed)
 
     def run_step(self, event):
         with self.data_lock:

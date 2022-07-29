@@ -1,3 +1,4 @@
 <launch>
   <node pkg="human_agent" name="human_agent" type="human_agent" output="screen" required="true"/>
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find human_agent)/config/config.rviz"/>
 </launch>

@@ -1,4 +1,6 @@
 _pycache__
+*/.tmp
 *.pyc
 */results
+*/log
 .vscode
