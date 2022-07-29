@@ -93,7 +93,7 @@ RUN cd $MAP_ROOT && colcon build --metas colcon_python.meta
 # Set environment variables
 ENV PYTHONPATH "$MAP_ROOT/install/ad_map_access/lib/python3.6":$TEAM_CODE_ROOT:${PYTHONPATH}
 
-ENV TEAM_AGENT ${TEAM_CODE_ROOT}/map_agent.py
+ENV TEAM_AGENT ${TEAM_CODE_ROOT}/ad_map_agent.py
 ENV CHALLENGE_TRACK_CODENAME MAP
 ############################################################################################
 ####                        END OF AGENT SPECIFIC COMMANDS                              ####

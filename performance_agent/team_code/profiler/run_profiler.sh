@@ -22,7 +22,6 @@ done
 [[ -d "/workspace/results/profiler" ]] || mkdir "/workspace/results/profiler"
 
 python3 ${TEAM_CODE_ROOT}/profiler/leaderboard_evaluator.py \
---scenarios=${SCENARIOS}  \
 --routes=${TEAM_CODE_ROOT}/profiler/data/route.xml \
 --repetitions=${REPETITIONS} \
 --track=${CHALLENGE_TRACK_CODENAME} \
