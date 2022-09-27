@@ -19,10 +19,10 @@ import xml.etree.ElementTree as ET
 
 from .map_agent_controller import VehiclePIDController
 from .map_helper import (enu_to_carla_loc,
-                                  get_shortest_route,
-                                  get_route_lane_list,
-                                  to_ad_paraPoint,
-                                  get_lane_interval_list)
+                         get_shortest_route,
+                         get_route_lane_list,
+                         to_ad_paraPoint,
+                         get_lane_interval_list)
 
 import ad_map_access as ad
 
@@ -313,8 +313,6 @@ class MapAgent(object):
             start_option = self._global_plan_world_coord[i-1][1]
             end_option = self._global_plan_world_coord[i][1]
             if start_option.value in (5, 6) and start_option == end_option:
-                start_parapoint = to_ad_paraPoint(start_location)
-                end_parapoint = to_ad_paraPoint(end_location)
                 if to_ad_paraPoint(start_location).laneId != to_ad_paraPoint(end_location).laneId:
                     continue  # Two points signifying a lane change, move to the next segment
 
