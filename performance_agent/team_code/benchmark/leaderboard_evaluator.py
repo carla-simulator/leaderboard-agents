@@ -22,7 +22,7 @@ def serialize_header(f):
     f.flush()
 
 
-def serialize_records(f, town, route, repetition, background_amount, duration_game, duration_system, sensors):
+def serialize_records(f, town, route, repetition, duration_game, duration_system, sensors):
 
     def serialize_sensor(sensor_spec):
         if sensor_spec['type'] == 'sensor.camera.rgb':
@@ -46,16 +46,15 @@ def serialize_records(f, town, route, repetition, background_amount, duration_ga
     if duration_system > 0:
         ratio = duration_game / duration_system
 
-    s = "| {} | {} | {} | {} | {:03.2f} | {:03.2f} | {} |\n".format(
+    s = "| {} | {} | {} | {:03.2f} | {:03.2f} | {} |\n".format(
         town,
         route,
         repetition,
-        background_amount,
         20 * ratio,
         ratio,
         " ".join([serialize_sensor(s) for s in sensors]),
     )
-    
+
     f.write(s)
     f.flush()
 
@@ -71,10 +70,8 @@ class LeaderboardBenchmarkEvaluator(LeaderboardEvaluator):
             self.benchmark_file = open(args.benchmark_filename, "w")
             serialize_header(self.benchmark_file)
 
-    def _register_statistics(self, config, checkpoint, entry_status, crash_message=""):
-        super(LeaderboardBenchmarkEvaluator, self)._register_statistics(
-            config, checkpoint, entry_status, crash_message
-        )
+    def _register_statistics(self, config, entry_status, crash_message=""):
+        super()._register_statistics(config, entry_status, crash_message)
 
         if not crash_message:
             serialize_records(
@@ -82,7 +79,6 @@ class LeaderboardBenchmarkEvaluator(LeaderboardEvaluator):
                 config.town,
                 config.name,
                 config.repetition_index,
-                self.manager.scenario_class.background_amount,
                 self.manager.scenario_duration_game,
                 self.manager.scenario_duration_system,
                 self.sensors
@@ -131,6 +127,11 @@ def main():
                         help="Path to checkpoint used for saving statistics and resuming")
     parser.add_argument("--debug-checkpoint", type=str, default='./live_results.txt',
                         help="Path to checkpoint used for saving live results")
+    
+    # benchmark options
+    parser.add_argument("--benchmark-filename", type=str,
+                        default='./benchmark.md',
+                        help="File used for saving benchmark results")
 
     arguments = parser.parse_args()
 

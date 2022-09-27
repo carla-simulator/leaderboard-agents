@@ -22,13 +22,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng16-16 \
     libtiff5 \
     libpng-dev \
-    python-dev \
-    python-pip \
-    python-setuptools \
     python3-dev \
     python3-pip \
     python3-setuptools &&\
-    python -m pip install --upgrade pip && \
     python3 -m pip install --upgrade pip && \
     rm -rf /var/lib/apt/lists/*
 
@@ -45,8 +41,6 @@ COPY .tmp/scenario_runner ${SCENARIO_RUNNER_ROOT}
 COPY .tmp/leaderboard ${LEADERBOARD_ROOT}
 COPY .tmp/team_code ${TEAM_CODE_ROOT}
 
-RUN pip2 install -r ${SCENARIO_RUNNER_ROOT}/requirements.txt
-RUN pip2 install -r ${LEADERBOARD_ROOT}/requirements.txt
 RUN pip3 install -r ${SCENARIO_RUNNER_ROOT}/requirements.txt
 RUN pip3 install -r ${LEADERBOARD_ROOT}/requirements.txt
 
@@ -66,7 +60,6 @@ ENV CHALLENGE_TRACK_CODENAME SENSORS
 ####                        END OF AGENT SPECIFIC COMMANDS                              ####
 ############################################################################################
 
-ENV SCENARIOS ${LEADERBOARD_ROOT}/data/all_towns_traffic_scenarios_public.json
 ENV ROUTES ${LEADERBOARD_ROOT}/data/routes_training.xml
 ENV REPETITIONS 1
 ENV CHECKPOINT_ENDPOINT /workspace/results/results.json
