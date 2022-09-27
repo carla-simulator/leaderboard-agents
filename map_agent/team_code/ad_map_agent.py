@@ -66,9 +66,10 @@ class ADMapAgent(AutonomousAgent):
 
     def run_step(self, data, timestamp):
         """Execute one step of navigation."""
-        return self._map_agent.run_step(data, timestamp)
+        control, _, _ = self._map_agent.run_step(data, timestamp)
+        return control
 
     def destroy(self):
         """Remove the AD map library files"""
         self._map_agent.destroy()
-        super(ADMapAgent, self).destroy()
+        super().destroy()

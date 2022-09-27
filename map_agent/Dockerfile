@@ -1,5 +1,4 @@
-ARG DISTRIBUTION=18.04
-FROM ubuntu:${DISTRIBUTION} AS ubuntu
+FROM nvidia/cuda:11.7.1-cudnn8-devel-ubuntu20.04
 
 ARG HTTP_PROXY
 ARG HTTPS_PROXY
@@ -23,13 +22,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng16-16 \
     libtiff5 \
     libpng-dev \
-    python-dev \
-    python-pip \
-    python-setuptools \
     python3-dev \
     python3-pip \
-    python3-setuptools &&\
-    python -m pip install --upgrade pip && \
+    python3-setuptools && \
     python3 -m pip install --upgrade pip && \
     rm -rf /var/lib/apt/lists/*
 
@@ -46,8 +41,6 @@ COPY .tmp/scenario_runner ${SCENARIO_RUNNER_ROOT}
 COPY .tmp/leaderboard ${LEADERBOARD_ROOT}
 COPY .tmp/team_code ${TEAM_CODE_ROOT}
 
-RUN pip2 install -r ${SCENARIO_RUNNER_ROOT}/requirements.txt
-RUN pip2 install -r ${LEADERBOARD_ROOT}/requirements.txt
 RUN pip3 install -r ${SCENARIO_RUNNER_ROOT}/requirements.txt
 RUN pip3 install -r ${LEADERBOARD_ROOT}/requirements.txt
 
@@ -59,39 +52,7 @@ ENV PYTHONPATH "${CARLA_ROOT}/PythonAPI/carla/dist/carla-leaderboard-py3x.egg":"
 ############################################################################################
 ####                     BEGINNING OF AGENT SPECIFIC COMMANDS                           ####
 ############################################################################################
-ENV MAP_ROOT "/workspace/map"
-COPY .tmp/map ${MAP_ROOT}
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        python-wheel \
-        python3-wheel \
-        libboost-all-dev \
-        libpugixml-dev \
-        libgtest-dev \
-        libpython-dev \
-        libosmium2-dev \
-        liblapacke-dev \
-        castxml \
-        doxygen \
-        graphviz \
-        gnupg2 \
-        lsb-release \
-        libproj-dev \
-        && rm -rf /var/lib/apt/lists/*
-
-RUN python2 -m pip install --user pygccxml pyplusplus
-RUN python3 -m pip install --user pygccxml pyplusplus
-
-# install colcon and build the code
-RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list'
-RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        python3-colcon-common-extensions \
-        && rm -rf /var/lib/apt/lists/*
-RUN cd $MAP_ROOT && colcon build --metas colcon_python.meta
-
-# Set environment variables
-ENV PYTHONPATH "$MAP_ROOT/install/ad_map_access/lib/python3.6":$TEAM_CODE_ROOT:${PYTHONPATH}
+RUN python3 -m pip install --user ad-map-access
 
 ENV TEAM_AGENT ${TEAM_CODE_ROOT}/ad_map_agent.py
 ENV CHALLENGE_TRACK_CODENAME MAP
@@ -99,7 +60,6 @@ ENV CHALLENGE_TRACK_CODENAME MAP
 ####                        END OF AGENT SPECIFIC COMMANDS                              ####
 ############################################################################################
 
-ENV SCENARIOS ${LEADERBOARD_ROOT}/data/all_towns_traffic_scenarios_public.json
 ENV ROUTES ${LEADERBOARD_ROOT}/data/routes_training.xml
 ENV REPETITIONS 1
 ENV CHECKPOINT_ENDPOINT /workspace/results/results.json
