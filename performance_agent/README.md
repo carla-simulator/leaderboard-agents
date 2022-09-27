@@ -18,6 +18,8 @@ The agent comes with a benchmark script, which runs a [version of the Leaderboar
 bash team_code/benchmark/run_benchmark.sh -o <benchmark file name>
 ```
 
+By default, the docker shares the `workspace/results` folder, so it is recommended to place the file there.
+
 ### Profiling
 
 Lastly, the agent is also capable of performing profiling. This uses a [version of the Leaderboard](https://github.com/carla-simulator/leaderboard-agents/blob/main/performance_agent/team_code/profiler/leaderboard_evaluator.py) that has annotations during the Leaderboard runtime. This creates a file that can then be opened using NVIDIA Nsight Systems. **To avoid the files being excessively big**, a [specific route](https://github.com/carla-simulator/leaderboard-agents/tree/main/performance_agent/team_code/profiler/data) is used, and **it should be stopped mid simulation**. To create the profiler file, run the following commands:
@@ -27,4 +29,4 @@ sh -c 'echo 1 >/proc/sys/kernel/perf_event_paranoid'
 nsys profile --sampling-period 500000 --sample=cpu --output=/workspace/results/profiler/<profiler file name>.qdrep bash team_code/profiler/run_profiler.sh
 ```
 
-Then, run NVIDIA Nsight Systems at your local machine, and open the file previously created.
+By default, the docker shares the `workspace/results` folder, so it is recommended to place the file there. If so, then it is only needed to run NVIDIA Nsight Systems at your local machine, and open the file previously created.

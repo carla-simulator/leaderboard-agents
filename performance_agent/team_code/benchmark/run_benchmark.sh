@@ -27,8 +27,8 @@ done
 [[ -d "/workspace/results/benchmark" ]] || mkdir "/workspace/results/benchmark"
 
 python3 ${TEAM_CODE_ROOT}/benchmark/leaderboard_evaluator.py \
---scenarios=${SCENARIOS}  \
 --routes=${ROUTES} \
+--routes-subset=${ROUTES_SUBSET} \
 --repetitions=${REPETITIONS} \
 --track=${CHALLENGE_TRACK_CODENAME} \
 --checkpoint=${CHECKPOINT_ENDPOINT} \

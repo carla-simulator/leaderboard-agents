@@ -25,7 +25,7 @@ echo "Copying the team code into the folder"
 cp -fr ${SCRIPT_DIR}/team_code/ ${SCRIPT_DIR}/.tmp/team_code
 
 echo "Building the docker"
-docker build --force-rm -t human_agent -f Dockerfile ${SCRIPT_DIR}/.
+docker build --force-rm -t human_agent -f ${SCRIPT_DIR}/Dockerfile ${SCRIPT_DIR}/.
 
 echo "Removing the temporary folder"
 rm -fr ${SCRIPT_DIR}/.tmp

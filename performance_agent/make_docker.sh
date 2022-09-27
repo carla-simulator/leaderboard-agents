@@ -12,10 +12,10 @@ cp -fr ${SCRIPT_DIR}/../submodules/scenario_runner/srunner ${SCRIPT_DIR}/.tmp/sc
 cp -fr ${SCRIPT_DIR}/../submodules/scenario_runner/requirements.txt ${SCRIPT_DIR}/.tmp/scenario_runner/requirements.txt  # And their requirements
 cp -fr ${SCRIPT_DIR}/../submodules/leaderboard/ ${SCRIPT_DIR}/.tmp
 
-cp ${SCRIPT_DIR}/entrypoint.sh .tmp/entrypoint.sh
+cp ${SCRIPT_DIR}/entrypoint.sh ${SCRIPT_DIR}/.tmp/entrypoint.sh
 
 echo "Building the docker"
-docker build --force-rm -t profiler_agent -f Dockerfile ${SCRIPT_DIR}/.
+docker build --force-rm -t profiler_agent -f ${SCRIPT_DIR}/Dockerfile ${SCRIPT_DIR}/.
 
 echo "Removing the temporary folder"
 rm -fr ${SCRIPT_DIR}/.tmp
