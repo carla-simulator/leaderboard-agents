@@ -54,6 +54,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo -e "mode: $MODE\nfile: $LOG_PATH" > $SCRIPT_DIR/human_agent_config.txt
 export TEAM_CONFIG=$SCRIPT_DIR/human_agent_config.txt
 
+export DEBUG_CHECKPOINT_ENDPOINT="$TEST_ROOT/live_results.txt"
+
 python3 ${LEADERBOARD_ROOT}/leaderboard/leaderboard_evaluator.py \
 --routes=${ROUTES} \
 --routes-subset=${ROUTES_SUBSET} \
