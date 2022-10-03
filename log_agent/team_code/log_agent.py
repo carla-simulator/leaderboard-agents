@@ -4,17 +4,17 @@
 # For a copy, see <https://opensource.org/licenses/MIT>.
 
 from leaderboard.autoagents.autonomous_agent import Track
-from leaderboard.autoagents.human_agent import HumanAgent as HumanAgent_
+from leaderboard.autoagents.human_agent import HumanAgent as HumanAgent
 from leaderboard.autoagents.human_agent import KeyboardControl as KeyboardControl_
 from leaderboard.autoagents.human_agent import HumanInterface
 from srunner.scenariomanager.carla_data_provider import CarlaDataProvider
 
 
 def get_entry_point():
-    return "HumanAgent"
+    return "LogAgent"
 
 
-class HumanAgent(HumanAgent_):
+class LogAgent(HumanAgent):
 
     def setup(self, path_to_conf_file):
 
