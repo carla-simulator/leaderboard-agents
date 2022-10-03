@@ -1,5 +1,0 @@
-<launch>
-  <node pkg="ros_map_agent" name="ros_map_agent" type="ros_map_agent" output="screen" required="true"/>
-
-  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find ros_map_agent)/config/config.rviz"/>
-</launch>
