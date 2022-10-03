@@ -1,17 +1,17 @@
 #!/bin/bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-${SCRIPT_DIR}/docker-gui \
+${SCRIPT_DIR}/../_utils/docker-gui \
     -it \
     --rm \
     --net=host \
     --privileged \
-    --volume=${SCRIPT_DIR}/../submodules/leaderboard:/workspace/leaderboard:rw \
-    --volume=${SCRIPT_DIR}/../submodules/scenario_runner:/workspace/scenario_runner:rw \
-    --volume=${SCRIPT_DIR}/../submodules/ros-bridge/carla_ros_bridge:/workspace/carla_ros_bridge/src/carla_ros_bridge:rw \
-    --volume=${SCRIPT_DIR}/../submodules/ros-bridge/carla_common:/workspace/carla_ros_bridge/src/carla_common:rw \
-    --volume=${SCRIPT_DIR}/../submodules/ros-bridge/carla_msgs:/workspace/carla_ros_bridge/src/carla_msgs:rw \
-    --volume=${SCRIPT_DIR}/../submodules/ros-bridge/ros_compatibility:/workspace/carla_ros_bridge/src/ros_compatibility:rw \
+    --volume=${SCRIPT_DIR}/../_submodules/leaderboard:/workspace/leaderboard:rw \
+    --volume=${SCRIPT_DIR}/../_submodules/scenario_runner:/workspace/scenario_runner:rw \
+    --volume=${SCRIPT_DIR}/../_submodules/ros-bridge/carla_ros_bridge:/workspace/carla_ros_bridge/src/carla_ros_bridge:rw \
+    --volume=${SCRIPT_DIR}/../_submodules/ros-bridge/carla_common:/workspace/carla_ros_bridge/src/carla_common:rw \
+    --volume=${SCRIPT_DIR}/../_submodules/ros-bridge/carla_msgs:/workspace/carla_ros_bridge/src/carla_msgs:rw \
+    --volume=${SCRIPT_DIR}/../_submodules/ros-bridge/ros_compatibility:/workspace/carla_ros_bridge/src/ros_compatibility:rw \
     --volume=${SCRIPT_DIR}/team_code/src:/workspace/team_code/src:rw \
     --volume=${SCRIPT_DIR}/team_code/ros_map_agent.py:/workspace/team_code/ros_map_agent.py:rw \
     --volume=${SCRIPT_DIR}/team_code/src/ros_map_agent/src/ros_map_agent/map_agent:/workspace/team_code/src/ros_map_agent/src/ros_map_agent/map_agent:rw \

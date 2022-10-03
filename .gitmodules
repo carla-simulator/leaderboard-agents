@@ -1,14 +1,12 @@
-[submodule "submodules/leaderboard"]
-	path = submodules/leaderboard
+[submodule "_submodules/leaderboard"]
+	path = _submodules/leaderboard
 	url = https://github.com/carla-simulator/leaderboard.git
-	branch = stable
-[submodule "submodules/scenario_runner"]
-	path = submodules/scenario_runner
+	branch = leaderboard-2.0
+[submodule "_submodules/scenario_runner"]
+	path = _submodules/scenario_runner
 	url = https://github.com/carla-simulator/scenario_runner.git
-	branch = leaderboard
-[submodule "submodules/map"]
-	path = submodules/map
-	url = https://github.com/carla-simulator/map.git
-[submodule "submodules/ros-bridge"]
-	path = submodules/ros-bridge
+	branch = leaderboard-2.0
+[submodule "_submodules/ros-bridge"]
+	path = _submodules/ros-bridge
 	url = https://github.com/carla-simulator/ros-bridge
+	branch = leaderboard-2.0
