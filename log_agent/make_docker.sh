@@ -14,9 +14,9 @@ mkdir -p ${SCRIPT_DIR}/.tmp/scenario_runner
 
 echo "Copying the submodules into the folder"
 cp -fr ${CARLA_ROOT}/PythonAPI  ${SCRIPT_DIR}/.tmp
-cp -fr ${SCRIPT_DIR}/../submodules/scenario_runner/srunner ${SCRIPT_DIR}/.tmp/scenario_runner/srunner  # Only srunner is really needed
-cp -fr ${SCRIPT_DIR}/../submodules/scenario_runner/requirements.txt ${SCRIPT_DIR}/.tmp/scenario_runner/requirements.txt  # And their requirements
-cp -fr ${SCRIPT_DIR}/../submodules/leaderboard/ ${SCRIPT_DIR}/.tmp
+cp -fr ${SCRIPT_DIR}/../_submodules/scenario_runner/srunner ${SCRIPT_DIR}/.tmp/scenario_runner/srunner  # Only srunner is really needed
+cp -fr ${SCRIPT_DIR}/../_submodules/scenario_runner/requirements.txt ${SCRIPT_DIR}/.tmp/scenario_runner/requirements.txt  # And their requirements
+cp -fr ${SCRIPT_DIR}/../_submodules/leaderboard/ ${SCRIPT_DIR}/.tmp
 
 mv ${SCRIPT_DIR}/.tmp/PythonAPI/carla/dist/carla*-py2*.egg ${SCRIPT_DIR}/.tmp/PythonAPI/carla/dist/carla-leaderboard-py2x.egg
 mv ${SCRIPT_DIR}/.tmp/PythonAPI/carla/dist/carla*-py3*.egg ${SCRIPT_DIR}/.tmp/PythonAPI/carla/dist/carla-leaderboard-py3x.egg

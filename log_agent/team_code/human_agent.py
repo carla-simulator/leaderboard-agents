@@ -3,8 +3,6 @@
 # This work is licensed under the terms of the MIT license.
 # For a copy, see <https://opensource.org/licenses/MIT>.
 
-import json
-
 from leaderboard.autoagents.autonomous_agent import Track
 from leaderboard.autoagents.human_agent import HumanAgent as HumanAgent_
 from leaderboard.autoagents.human_agent import KeyboardControl as KeyboardControl_
@@ -52,7 +50,6 @@ class HumanAgent(HumanAgent_):
 
 
 class KeyboardControl(KeyboardControl_):
-
 
     def __init__(self, player, path_to_conf_file):
         self._player = player
