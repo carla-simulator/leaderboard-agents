@@ -8,6 +8,7 @@
 import argparse
 import threading
 import sys
+import os
 
 import carla
 
@@ -80,6 +81,10 @@ def main():
 
     client = None
     world = None
+
+    if not os.path.exists(args.file):
+        print("WARNING: The specified '.log' file does not exist. Shutting down")
+        sys.exit(-1)
 
     # Get the client
     print("\n\033[1m> Setting the simulation\033[0m")
@@ -161,3 +166,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

@@ -6,10 +6,10 @@ The main feature of this agent is its capability to record the simualted routes,
 
 To use the agent, create and run the docker the same way as any of the other agents. Note that when running the docker, a `HOST_RESULTS_PATH` variable is being set up. This variable is used **by the server** to know where to place the recorder logs.
 
-Once inside the docker, run the `run_evaluation.sh` script as normal, but this agent has several additional arguments:
+Once inside the docker, run the `run_evaluation.sh` script inside the `team_code` folder, whichhas several additional arguments:
 
 ```
-bash leaderboard/scripts/run_evaluation.sh -m <mode> -id <id>
+bash team_code/run_evaluation.sh -m <mode> -id <id>
 ```
 
 The first argument, `-m`, is the mode, which has two values, `log`, and `playback`.

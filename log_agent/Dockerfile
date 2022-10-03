@@ -53,8 +53,8 @@ ENV PYTHONPATH "${CARLA_ROOT}/PythonAPI/carla/dist/carla-leaderboard-py3x.egg":"
 ####                     BEGINNING OF AGENT SPECIFIC COMMANDS                           ####
 ############################################################################################
 
-ENV TEAM_AGENT ${TEAM_CODE_ROOT}/human_agent.py
-ENV TEAM_CONFIG ${TEAM_CODE_ROOT}/human_agent_config.txt
+ENV TEAM_AGENT ${TEAM_CODE_ROOT}/log_agent.py
+ENV TEAM_CONFIG ${TEAM_CODE_ROOT}/log_agent_config.txt
 ENV CHALLENGE_TRACK_CODENAME SENSORS
 
 ############################################################################################
@@ -72,3 +72,4 @@ ENV http_proxy ""
 ENV https_proxy ""
 
 CMD ["/bin/bash"]
+
