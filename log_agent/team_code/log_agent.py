@@ -3,18 +3,36 @@
 # This work is licensed under the terms of the MIT license.
 # For a copy, see <https://opensource.org/licenses/MIT>.
 
+try:
+    import pygame
+    from pygame.locals import K_DOWN
+    from pygame.locals import K_LEFT
+    from pygame.locals import K_RIGHT
+    from pygame.locals import K_SPACE
+    from pygame.locals import K_UP
+    from pygame.locals import K_a
+    from pygame.locals import K_d
+    from pygame.locals import K_s
+    from pygame.locals import K_w
+    from pygame.locals import K_q
+    from pygame.locals import K_e
+except ImportError:
+    raise RuntimeError('cannot import pygame, make sure pygame package is installed')
+
+from agents.navigation.basic_agent import BasicAgent
+
 from leaderboard.autoagents.autonomous_agent import Track
-from leaderboard.autoagents.human_agent import HumanAgent as HumanAgent
+from leaderboard.autoagents.human_agent import HumanAgent as HumanAgent_
 from leaderboard.autoagents.human_agent import KeyboardControl as KeyboardControl_
 from leaderboard.autoagents.human_agent import HumanInterface
 from srunner.scenariomanager.carla_data_provider import CarlaDataProvider
 
 
 def get_entry_point():
-    return "LogAgent"
+    return "HumanAgent"
 
 
-class LogAgent(HumanAgent):
+class HumanAgent(HumanAgent_):
 
     def setup(self, path_to_conf_file):
 
@@ -45,15 +63,78 @@ class LogAgent(HumanAgent):
             self._left_mirror,
             self._right_mirror
         )
-        self._controller = KeyboardControl(self._player, path_to_conf_file)
+        self._controller = KeyboardControl(self._player, self._global_plan_world_coord, path_to_conf_file)
         self._prev_timestamp = 0
 
 
 class KeyboardControl(KeyboardControl_):
 
-    def __init__(self, player, path_to_conf_file):
+
+    def __init__(self, player, route, path_to_conf_file):
         self._player = player
+        self._route = route
+        self._agent_active = False
+        self._last_tick = 0
+
+        # Add an agent that follows the route to the ego
+        self._agent = BasicAgent(player, 30, {'distance_ratio': 0.3, 'base_min_distance': 2})
+
+        route_keypoints = CarlaDataProvider.get_ego_route()
+        grp = CarlaDataProvider.get_global_route_planner()
+        route = []
+        for i in range(len(route_keypoints) - 1):
+            waypoint = route_keypoints[i]
+            waypoint_next = route_keypoints[i + 1]
+            interpolated_trace = grp.trace_route(waypoint, waypoint_next)
+            for wp, connection in interpolated_trace:
+                route.append((wp, connection))
+
+        self._agent.set_global_plan(route)
+
         super().__init__(path_to_conf_file)
+
+    def _parse_vehicle_keys(self, keys, milliseconds):
+        """
+        Calculate new vehicle controls based on input keys
+        """
+        agent_control = self._agent.run_step()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return 
+            elif event.type == pygame.KEYUP:
+                if event.key == K_q:
+                    self._control.gear = 1 if self._control.reverse else -1
+                    self._control.reverse = self._control.gear < 0
+
+        if keys[K_UP] or keys[K_w]:
+            self._control.throttle = 0.8
+        else:
+            self._control.throttle = 0.0
+
+        if keys[K_e] and self._last_tick == 0:
+            if self._agent_active:
+                print("Deactivating the controller")
+            else:
+                print("Activating the controller")
+            self._last_tick = 20
+            self._agent_active = not self._agent_active
+        self._last_tick = max(self._last_tick - 1, 0)
+
+        if not self._agent_active:
+            steer_increment = 3e-4 * milliseconds
+            if keys[K_LEFT] or keys[K_a]:
+                self._steer_cache -= steer_increment
+            elif keys[K_RIGHT] or keys[K_d]:
+                self._steer_cache += steer_increment
+            else:
+                self._steer_cache = 0.0
+        else:
+            self._steer_cache = agent_control.steer
+
+        self._control.steer = round(self._steer_cache, 1)
+        self._control.brake = 1.0 if keys[K_DOWN] or keys[K_s] else 0.0
+        self._control.hand_brake = keys[K_SPACE]
 
     def _record_control(self):
 

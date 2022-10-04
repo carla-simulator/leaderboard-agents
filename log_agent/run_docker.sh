@@ -6,6 +6,8 @@ ${SCRIPT_DIR}/../_utils/docker-gui \
     --rm \
     --net=host \
     --volume=${SCRIPT_DIR}/results:/workspace/results:rw \
+    --volume=${SCRIPT_DIR}/team_code/carla_data_provider.py:/workspace/scenario_runner/srunner/scenariomanager/carla_data_provider.py:rw \
+    --volume=${SCRIPT_DIR}/team_code/route_scenario.py:/workspace/leaderboard/leaderboard/scenarios/route_scenario.py:rw \
     --env HOST_RESULTS_PATH=${SCRIPT_DIR}/results \
     --env DEBUG_CHALLENGE=1 \
     --env ROUTES_SUBSET=0 \
