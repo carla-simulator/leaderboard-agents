@@ -78,6 +78,7 @@ class KeyboardControl(KeyboardControl_):
 
         # Add an agent that follows the route to the ego
         self._agent = BasicAgent(player, 30, {'distance_ratio': 0.3, 'base_min_distance': 2})
+        self._agent.follow_speed_limits()
 
         route_keypoints = CarlaDataProvider.get_ego_route()
         grp = CarlaDataProvider.get_global_route_planner()
@@ -107,10 +108,20 @@ class KeyboardControl(KeyboardControl_):
                     self._control.gear = 1 if self._control.reverse else -1
                     self._control.reverse = self._control.gear < 0
 
-        if keys[K_UP] or keys[K_w]:
-            self._control.throttle = 0.8
-        else:
+        max_speed = self._player.get_speed_limit()
+        current_speed = self._player.get_velocity().length()
+        if keys[K_DOWN] or keys[K_s]:  # Braking takes priority
             self._control.throttle = 0.0
+            self._control.brake = 1.0
+        elif 3.6 * current_speed > max_speed:  # Ensure the max speed is never surpassed
+            self._control.throttle = agent_control.throttle
+            self._control.brake = agent_control.brake
+        elif keys[K_UP] or keys[K_w]:  # Accelerate
+            self._control.throttle = 0.8
+            self._control.brake = 0.0
+        else:  # Idle
+            self._control.throttle = 0.0
+            self._control.brake = 0.0
 
         if keys[K_e] and self._last_tick == 0:
             if self._agent_active:
@@ -133,7 +144,6 @@ class KeyboardControl(KeyboardControl_):
             self._steer_cache = agent_control.steer
 
         self._control.steer = round(self._steer_cache, 1)
-        self._control.brake = 1.0 if keys[K_DOWN] or keys[K_s] else 0.0
         self._control.hand_brake = keys[K_SPACE]
 
     def _record_control(self):
