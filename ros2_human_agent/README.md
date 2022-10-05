@@ -1,2 +1,3 @@
-# ros2-human-agent
+# ROS2 Human agent
 
+A ROS2 agent that allows the user to manually control the ego vehicle through the keyboard. This agents is based on ROS2 foxy.

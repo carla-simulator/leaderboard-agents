@@ -22,7 +22,11 @@ By default, the docker shares the `workspace/results` folder, so it is recommend
 
 ### Profiling
 
-Lastly, the agent is also capable of performing profiling. This uses a [version of the Leaderboard](https://github.com/carla-simulator/leaderboard-agents/blob/main/performance_agent/team_code/profiler/leaderboard_evaluator.py) that has annotations during the Leaderboard runtime. This creates a file that can then be opened using NVIDIA Nsight Systems. **To avoid the files being excessively big**, a [specific route](https://github.com/carla-simulator/leaderboard-agents/tree/main/performance_agent/team_code/profiler/data) is used, and **it should be stopped mid simulation**. To create the profiler file, run the following commands:
+Lastly, the agent is also capable of performing profiling. It is possible to profile both the client side and the server side.
+
+#### Client profiling
+
+This uses a [version of the Leaderboard](https://github.com/carla-simulator/leaderboard-agents/blob/main/performance_agent/team_code/profiler/leaderboard_evaluator.py) that has annotations during the Leaderboard runtime. This creates a file that can then be opened using [NVIDIA Nsight Systems](https://developer.nvidia.com/nsight-systems). **To avoid the files being excessively big**, a [specific route](https://github.com/carla-simulator/leaderboard-agents/tree/main/performance_agent/team_code/profiler/data) is used, and **it should be stopped mid simulation**. To create the profiler file, run the following commands:
 
 ```sh
 sh -c 'echo 1 >/proc/sys/kernel/perf_event_paranoid'
@@ -30,3 +34,13 @@ nsys profile --sampling-period 500000 --sample=cpu --output=/workspace/results/p
 ```
 
 By default, the docker shares the `workspace/results` folder, so it is recommended to place the file there. If so, then it is only needed to run NVIDIA Nsight Systems at your local machine, and open the file previously created.
+
+## Server profiling
+
+To profile the server it is needed to use a package in development mode. To start the server in profiling mode run the following command:
+
+```sh
+${CARLA_ROOT}/CarlaUE4.sh -trace=counters,cpu,frame,bookmark,gpu -tracefile=ue4_trace.utrace
+```
+
+The profiling files are save in `${CARLA_ROOT}/CarlaUE4/Saved/Profiling/`
