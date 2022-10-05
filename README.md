@@ -65,7 +65,7 @@ In order to run the Leaderboard, you need to also have [CARLA](https://github.co
 The `_submodules` folder also contains references to other packages needed by specific agents. The following table shows the exact submodules used for each agent:
 
 | Agent | ScenarioRunner | Leaderboard | ROS Bridge |
-| ---- | ----- | ----- | ------------- | -------- |
+| ---- | ---- | ---- | ---- |
 | Human Agent |  &#9989; | &#9989;|  |
 | ROS human agent | &#9989; | &#9989;| &#9989;|
 | ROS2 human agent | &#9989; | &#9989;| &#9989;|
