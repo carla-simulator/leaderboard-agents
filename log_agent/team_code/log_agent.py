@@ -79,6 +79,9 @@ class KeyboardControl(KeyboardControl_):
         # Add an agent that follows the route to the ego
         self._agent = BasicAgent(player, 30, {'distance_ratio': 0.3, 'base_min_distance': 2})
         self._agent.follow_speed_limits()
+        self._agent.ignore_traffic_lights()
+        self._agent.ignore_stop_signs()
+        self._agent.ignore_vehicles()
 
         route_keypoints = CarlaDataProvider.get_ego_route()
         grp = CarlaDataProvider.get_global_route_planner()
