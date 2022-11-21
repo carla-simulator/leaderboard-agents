@@ -4,15 +4,17 @@ This repository serves as a guideline for users to see how to run different agen
 
 ## Submodules
 
-In order to run the Leaderboard, you need to also have [CARLA](https://github.com/carla-simulator/carla) as well as [ScenarioRunner](https://github.com/carla-simulator/scenario_runner) installed. Both ScenarioRunner and the Leaderboard are available in this repository, inside the `submodules` folder, and they will be automatically fetched when creating the docker. To allow doing some tests locally, a specific version of CARLA isn't being given. Instead, use the `CARLA_ROOT` environment variable to point to your CARLA folder.
+In order to run the Leaderboard, you need to also have [CARLA](https://github.com/carla-simulator/carla) as well as [ScenarioRunner](https://github.com/carla-simulator/scenario_runner) installed. Both ScenarioRunner and the Leaderboard are available in this repository, inside the `_submodules` folder, and they will be automatically fetched when creating the docker. To allow doing some tests locally, a specific version of CARLA isn't being given. Instead, use the `CARLA_ROOT` environment variable to point to your CARLA folder.
 
-The `submodules` folder also contains references to other packages needed by specific agents. The following table shows the exact submodules used for each agent:
+The `_submodules` folder also contains references to other packages needed by specific agents. The following table shows the exact submodules used for each agent:
 
-| Agent | ScenarioRunner | Leaderboard | AD Map | ROS Bridge |
-| ---- | ----- | ----- | ------------- | -------- |
-| AD Map agent |  &#9989; | &#9989;| &#9989;|  |
-| ROS human agent | &#9989; | &#9989;| | &#9989;|
-| Performance agent | &#9989; | &#9989; |  |  |
+| Agent | ScenarioRunner | Leaderboard | ROS Bridge |
+| ---- | ---- | ---- | ---- |
+| Human Agent |  &#9989; | &#9989;|  |
+| ROS human agent | &#9989; | &#9989;| &#9989;|
+| ROS2 human agent | &#9989; | &#9989;| &#9989;|
+| Performance agent | &#9989; | &#9989; |  |
+| Log agent | &#9989; | &#9989; |  |
 
 **Note:** Remember to download all the submodules using
 
