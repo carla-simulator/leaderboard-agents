@@ -16,6 +16,9 @@ try:
     from pygame.locals import K_w
     from pygame.locals import K_q
     from pygame.locals import K_e
+    from pygame.locals import K_f
+    from pygame.locals import K_r
+    from pygame.locals import K_t
 except ImportError:
     raise RuntimeError('cannot import pygame, make sure pygame package is installed')
 
@@ -74,7 +77,9 @@ class KeyboardControl(KeyboardControl_):
         self._player = player
         self._route = route
         self._agent_active = False
-        self._last_tick = 0
+        self._controller_tick = 0
+        self._offset_active = False
+        self._offset_tick = 0
 
         # Add an agent that follows the route to the ego
         self._agent = BasicAgent(player, 30, {'distance_ratio': 0.3, 'base_min_distance': 2})
@@ -126,14 +131,55 @@ class KeyboardControl(KeyboardControl_):
             self._control.throttle = 0.0
             self._control.brake = 0.0
 
-        if keys[K_e] and self._last_tick == 0:
+        # Controller
+        if keys[K_e] and self._controller_tick == 0:
             if self._agent_active:
                 print("Deactivating the controller")
             else:
                 print("Activating the controller")
-            self._last_tick = 20
+            self._controller_tick = 20
             self._agent_active = not self._agent_active
-        self._last_tick = max(self._last_tick - 1, 0)
+        self._controller_tick = max(self._controller_tick - 1, 0)
+
+        # Offset
+        if keys[K_f] and self._offset_tick == 0:
+            self._agent_active = True
+            if self._offset_active:
+                print("Deactivating the offset1")
+                self._agent.set_offset(0)
+            else:
+                print("Activating the offset1")
+                self._agent.set_offset(0.5)
+            self._offset_active = not self._offset_active
+            self._offset_tick = 20
+        self._offset_tick = max(self._offset_tick - 1, 0)
+
+        # Offset
+        if keys[K_r] and self._offset_tick == 0:
+            self._agent_active = True
+            if self._offset_active:
+                print("Deactivating the offset2")
+                self._agent.set_offset(0)
+            else:
+                print("Activating the offset2")
+                self._agent.set_offset(1.5)
+            self._offset_active = not self._offset_active
+            self._offset_tick = 20
+        self._offset_tick = max(self._offset_tick - 1, 0)
+
+        # Offset
+        if keys[K_t] and self._offset_tick == 0:
+            self._agent_active = True
+            if self._offset_active:
+                print("Deactivating the offset3 ")
+                self._agent.set_offset(0)
+            else:
+                print("Activating the offset3")
+                self._agent.set_offset(2.5)
+            self._offset_active = not self._offset_active
+            self._offset_tick = 20
+        self._offset_tick = max(self._offset_tick - 1, 0)
+
 
         if not self._agent_active:
             steer_increment = 3e-4 * milliseconds

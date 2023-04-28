@@ -14,7 +14,7 @@ import carla
 
 FPS = 20
 FIRST_FRAME = 0
-LAST_FRAME = None
+LAST_FRAME = False
 REPLAY_SPEED = 1
 TIME = 0
 
@@ -24,7 +24,7 @@ def tick(world):
     TIME += world.get_snapshot().delta_seconds * REPLAY_SPEED
 
 def recorder_utilities(world, client):
-    global LAST_FRAME, REPLAY_SPEED, FIRST_FRAME
+    global LAST_FRAME, REPLAY_SPEED
     stop = False
 
     while not stop and not LAST_FRAME:
@@ -39,12 +39,10 @@ def recorder_utilities(world, client):
                 print("\033[93mIgnoring unknown command '{}'\033[0m".format(data))
                 continue
 
-            print("  Frame: {}\n  Time: {}".format(
-                world.get_snapshot().frame - FIRST_FRAME, round(TIME, 3))
-            )
+            print("  Time: {}".format(round(TIME, 3)))
             if data == 'S':
                 stop = True
-    LAST_FRAME = world.get_snapshot().frame
+    LAST_FRAME = True
 
 def main():
     argparser = argparse.ArgumentParser(
@@ -75,9 +73,10 @@ def main():
         print("Choose to either follow an id, or the ego vehicle, but not both")
         sys.exit(0)
 
-    global TIME, LAST_FRAME, FIRST_FRAME
+    global TIME, LAST_FRAME, REPLAY_SPEED
 
     TIME = args.start_time
+    REPLAY_SPEED = args.factor
 
     client = None
     world = None
@@ -111,9 +110,6 @@ def main():
     settings.synchronous_mode = True
     settings.fixed_delta_seconds = 1/FPS
     world.apply_settings(settings)
-
-    # Get the world frame before the recorded starts. TODO: Understand why this is one more (hence the -1)
-    FIRST_FRAME = world.get_snapshot().frame - 1
 
     # Get the ego vehicle id so that the spectator focuses on it
     follow_id = args.follow_id
@@ -149,7 +145,7 @@ def main():
         while not LAST_FRAME:
             tick(world)
             if TIME >= duration:
-                LAST_FRAME = world.get_snapshot().frame
+                LAST_FRAME = True
 
     except KeyboardInterrupt:
         pass
