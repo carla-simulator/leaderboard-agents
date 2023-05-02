@@ -8,6 +8,7 @@ from __future__ import print_function
 
 import argparse
 import os
+import sys
 import traceback
 from argparse import RawTextHelpFormatter
 
@@ -67,8 +68,9 @@ class ScenarioManagerWithAnnotations(ScenarioManager):
                 self._watchdog.resume()
                 self.ego_vehicles[0].apply_control(ego_action)
 
-            # Tick scenario
+            # Tick scenario. Add the ego control to the blackb
             with nvtx.annotate("ScenarioManager._tick_scenario", color="green"):
+                py_trees.blackboard.Blackboard().set("AV_control", ego_action, overwrite=True)
                 self.scenario_tree.tick_once()
 
             if self._debug_mode > 1:
@@ -84,13 +86,13 @@ class ScenarioManagerWithAnnotations(ScenarioManager):
                 self._statistics_manager.write_live_results(
                     self.config.index,
                     self.ego_vehicles[0].get_velocity().length(),
-                    ego_action
+                    ego_action,
+                    self.ego_vehicles[0].get_location()
                 )
 
             if self._debug_mode > 2:
                 print("\n")
-                py_trees.display.print_ascii_tree(
-                    self.scenario_tree, show_status=True)
+                py_trees.display.print_ascii_tree(self.scenario_tree, show_status=True)
                 sys.stdout.flush()
 
             if self.scenario_tree.status != py_trees.common.Status.RUNNING:
@@ -127,7 +129,7 @@ def main():
                         help='Run with debug output', default=0)
     parser.add_argument('--record', type=str, default='',
                         help='Use CARLA recording feature to create a recording of the scenario')
-    parser.add_argument('--timeout', default=60.0, type=float,
+    parser.add_argument('--timeout', default=300.0, type=float,
                         help='Set the CARLA client timeout value in seconds')
 
     # simulation setup
